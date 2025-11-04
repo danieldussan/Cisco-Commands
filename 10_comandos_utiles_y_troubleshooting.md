@@ -2,31 +2,34 @@
 
 Comandos rápidos para diagnóstico y monitoreo.
 
-- ping <ip>
+
+- `ping <ip>`
   - Verifica conectividad básica.
 
-- traceroute <ip>
+- `traceroute <ip>`
   - Muestra la ruta hacia un destino.
 
-- show cdp neighbors
+- `show cdp neighbors`
   - Muestra dispositivos Cisco conectados directamente.
 
-- show arp
+- `show arp`
   - Tabla ARP.
 
-- show controllers
+- `show controllers`
   - Información de controladores y hardware (puede variar por plataforma).
 
-- debug ip packet
+- `debug ip packet`
   - Muestra paquetes IP procesados; usar con precaución en producción.
 
 ## Comandos de verificación de capa 2/3
 
-- show mac-address-table
-- show interfaces trunk
-- show etherchannel summary
+
+- `show mac-address-table`
+- `show interfaces trunk`
+- `show etherchannel summary`
 
 ## Recuperación de contraseñas (resumen operativo)
+
 
 1. Reiniciar y entrar en ROMMON (Ctrl+Break).
 2. `confreg 0x2142`
@@ -38,5 +41,5 @@ Comandos rápidos para diagnóstico y monitoreo.
 
 ## Tips rápidos
 
-- Cuando algo no funciona, revisar `show ip interface brief`, `show ip route` y `show running-config`.
+-- Cuando algo no funciona, revisar `show ip interface brief`, `show ip route` y `show running-config`.
 - Para problemas de enlace, revisar `show interfaces <if>` y `show controllers <if>`.

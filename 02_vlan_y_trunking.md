@@ -19,14 +19,14 @@ Contenido:
 
 Crear VLAN:
 
-S1(config)# vlan 10
-S1(config-vlan)# name Users
+S1(config)# `vlan 10`
+S1(config-vlan)# `name Users`
 
 Asignar puerto a VLAN (modo access):
 
-S1(config)# interface GigabitEthernet1/0/5
-S1(config-if)# switchport mode access
-S1(config-if)# switchport access vlan 10
+S1(config)# `interface GigabitEthernet1/0/5`
+S1(config-if)# `switchport mode access`
+S1(config-if)# `switchport access vlan 10`
 
 Explicación breve:
 - `switchport mode access` fuerza el puerto a modo acceso.
@@ -34,16 +34,17 @@ Explicación breve:
 
 ## Configurar trunk 802.1Q
 
+
 Configurar trunk estático (recomendado cuando se conoce el otro extremo):
 
-S1(config)# interface GigabitEthernet1/0/1
-S1(config-if)# switchport mode trunk
-S1(config-if)# switchport trunk encapsulation dot1q  # (en plataformas que soportan ambos)
-S1(config-if)# switchport trunk native vlan 99
+S1(config)# `interface GigabitEthernet1/0/1`
+S1(config-if)# `switchport mode trunk`
+S1(config-if)# `switchport trunk encapsulation dot1q`  # (en plataformas que soportan ambos)
+S1(config-if)# `switchport trunk native vlan 99`
 
 Permitir VLANs específicas en el trunk:
 
-S1(config-if)# switchport trunk allowed vlan 10,20,99
+S1(config-if)# `switchport trunk allowed vlan 10,20,99`
 
 Notas:
 - `switchport trunk native vlan <id>` — define qué VLAN se envía sin tag. Evitar usar VLAN 1 como nativa por seguridad.
@@ -56,48 +57,48 @@ Notas:
 
 Ejemplo seguro (trunk estático, sin DTP):
 
-S1(config)# interface GigabitEthernet1/0/1
-S1(config-if)# switchport mode trunk
-S1(config-if)# switchport nonegotiate
+S1(config)# `interface GigabitEthernet1/0/1`
+S1(config-if)# `switchport mode trunk`
+S1(config-if)# `switchport nonegotiate`
 
 ## Voice VLAN
 
 Cuando conectas teléfonos IP, normalmente quieres separar la voz y datos:
 
-S1(config)# interface GigabitEthernet1/0/10
-S1(config-if)# switchport mode access
-S1(config-if)# switchport access vlan 10       # VLAN datos
-S1(config-if)# switchport voice vlan 150       # VLAN voz
-S1(config-if)# mls qos trust cos               # confiar en el COS del teléfono
+S1(config)# `interface GigabitEthernet1/0/10`
+S1(config-if)# `switchport mode access`
+S1(config-if)# `switchport access vlan 10`       # VLAN datos
+S1(config-if)# `switchport voice vlan 150`       # VLAN voz
+S1(config-if)# `mls qos trust cos`               # confiar en el COS del teléfono
 
 Explicación:
 - `switchport voice vlan <id>` — etiqueta el tráfico de voz y permite que el teléfono envíe datos de voz en la VLAN de voz.
 
 ## Troubleshooting de trunks
 
-- show interfaces trunk
+ - `show interfaces trunk`
   - Muestra puertos trunk, VLANs permitidas y native VLAN.
 
-- show vlan brief
+ - `show vlan brief`
   - Confirma qué puertos están asignados a cada VLAN.
 
-- show interfaces GigabitEthernet1/0/1 switchport
+ - `show interfaces GigabitEthernet1/0/1 switchport`
   - Muestra modo del puerto (access/trunk), VLAN nativa y configuración DTP.
 
-- show cdp neighbors detail
+ - `show cdp neighbors detail`
   - Verifica la conexión entre switches y la interfaz remota.
 
 Problemas comunes y soluciones:
 
-- Problema: Trunk no se forma.
+ - Problema: Trunk no se forma.
   - Causa probable: mismatch de encapsulation (ISL vs dot1Q) o DTP deshabilitado en un extremo.
   - Solución: Asegurar `switchport trunk encapsulation dot1q` (si aplica) y `switchport mode trunk` en ambos extremos, o usar `nonegotiate` si es estático.
 
-- Problema: VLAN no pasa por el trunk.
+ - Problema: VLAN no pasa por el trunk.
   - Causa probable: `switchport trunk allowed vlan` restringe la VLAN.
   - Solución: Agregar la VLAN a la lista permitida: `switchport trunk allowed vlan add <vlan-id>`.
 
-- Problema: Problemas con VLAN nativa (mismatch de native VLAN)
+ - Problema: Problemas con VLAN nativa (mismatch de native VLAN)
   - Causa: native VLAN diferente entre extremos → tráfico no etiquetado va a otra VLAN.
   - Solución: Alinear `switchport trunk native vlan <id>` en ambos extremos o evitar native VLAN poniendo todas las VLAN con tags y usando una VLAN no usada para native.
 
@@ -108,7 +109,5 @@ Problemas comunes y soluciones:
 - Filtrar VLANs permitidas en trunks para reducir el blast domain: `switchport trunk allowed vlan 10,20,150`.
 - Habilitar Port-Security en puertos de acceso.
 
-## Ejercicios prácticos
+---
 
-1. Configura un enlace troncal entre S1 y S2 que lleve VLANs 10, 20 y 150, con native VLAN 99. Verifica con `show interfaces trunk`.
-2. Configura un puerto con voice VLAN y simula la conectividad con un IP Phone (datos en VLAN10, voz en VLAN150).

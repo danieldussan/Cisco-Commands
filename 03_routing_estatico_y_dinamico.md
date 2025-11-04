@@ -4,11 +4,11 @@
 
 Comando:
 
-ip route <network> <mask> <next-hop-ip | exit-interface> [administrative-distance]
+`ip route <network> <mask> <next-hop-ip | exit-interface> [administrative-distance]`
 
 Ejemplo:
 
-R1(config)# ip route 0.0.0.0 0.0.0.0 203.0.113.1
+R1(config)# `ip route 0.0.0.0 0.0.0.0 203.0.113.1`
 
 Notas:
 - `exit-interface` se usa en enlaces punto a punto; `next-hop-ip` es lo más común.
@@ -35,8 +35,5 @@ Redes 3 (Ruteo y servicios):
 - ACLs y políticas de seguridad
 - Troubleshooting y optimización de redes
 
-## Ejercicios recomendados por nivel
+---
 
-- Redes 1: Practicar subnetting y configurar una red pequeña con un switch y un router (una VLAN de usuarios y una VLAN de gestión).
-- Redes 2: Configurar trunk entre dos switches, crear VLANs y probar comunicación entre ellas usando router-on-a-stick.
-- Redes 3: Implementar OSPF entre 3 routers y verificar convergencia; añadir ACLs para restringir servicios.

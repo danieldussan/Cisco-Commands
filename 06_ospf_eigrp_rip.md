@@ -4,11 +4,12 @@ Este archivo contiene ejemplos de configuración y comandos de verificación bá
 
 ## OSPF
 
+
 Configuración básica (área 0):
 
-R1(config)# router ospf 1
-R1(config-router)# network 192.168.1.0 0.0.0.255 area 0
-R1(config-router)# passive-interface GigabitEthernet0/0
+R1(config)# `router ospf 1`
+R1(config-router)# `network 192.168.1.0 0.0.0.255 area 0`
+R1(config-router)# `passive-interface GigabitEthernet0/0`
 
 Notas:
 - `router ospf <process-id>` — identifica el proceso OSPF local (número local, no sincroniza entre routers).
@@ -16,16 +17,17 @@ Notas:
 
 Verificación:
 
-R1# show ip protocols
-R1# show ip ospf neighbor
-R1# show ip ospf interface
+R1# `show ip protocols`
+R1# `show ip ospf neighbor`
+R1# `show ip ospf interface`
 
 ## RIP v2
 
-R1(config)# router rip
-R1(config-router)# version 2
-R1(config-router)# network 192.168.1.0
-R1(config-router)# no auto-summary
+
+R1(config)# `router rip`
+R1(config-router)# `version 2`
+R1(config-router)# `network 192.168.1.0`
+R1(config-router)# `no auto-summary`
 
 Notas:
 - `version 2` — habilita RIP v2 (soporta máscaras y multicasting).
@@ -33,14 +35,15 @@ Notas:
 
 Verificación:
 
-R1# show ip rip database
-R1# show ip route rip
+R1# `show ip rip database`
+R1# `show ip route rip`
 
 ## EIGRP (classic)
 
-R1(config)# router eigrp 10
-R1(config-router)# network 192.168.1.0 0.0.0.255
-R1(config-router)# no auto-summary
+
+R1(config)# `router eigrp 10`
+R1(config-router)# `network 192.168.1.0 0.0.0.255`
+R1(config-router)# `no auto-summary`
 
 Notas:
 - `router eigrp <asn>` — AS local para EIGRP (debe coincidir con vecinos para establecer adyacencia en classic EIGRP).
@@ -48,9 +51,9 @@ Notas:
 
 Verificación:
 
-R1# show ip eigrp neighbors
-R1# show ip eigrp topology
-R1# show ip protocols
+R1# `show ip eigrp neighbors`
+R1# `show ip eigrp topology`
+R1# `show ip protocols`
 
 ## Consejos de diseño y CCNA
 

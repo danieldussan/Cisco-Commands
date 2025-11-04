@@ -4,6 +4,7 @@ Guía práctica para crear y aplicar listas de control de acceso (ACL) en router
 
 ## ACL estándar
 
+
 Ejemplo:
 
 - R1(config)# `access-list 10 permit 192.168.1.0 0.0.0.255`
