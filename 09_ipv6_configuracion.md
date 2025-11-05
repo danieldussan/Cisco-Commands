@@ -15,7 +15,7 @@ R1(config-if)# `no shutdown`
 ## SLAAC y DHCPv6
 
 
-- Para soporte SLAAC, las interfaces anuncian prefixos si están configuradas correctamente.
+- Para soporte SLAAC, las interfaces anuncian prefijos si están configuradas correctamente.
 - Para DHCPv6 usar un servidor DHCPv6 externo o configurar `ipv6 dhcp pool` en IOS.
 
 ## Verificación

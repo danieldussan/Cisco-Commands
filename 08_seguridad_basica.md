@@ -52,7 +52,7 @@ Recomendación:
 
 
 - Guardar configuraciones frecuentemente: `copy running-config startup-config`.
-- Automatizar backups con logs o scripts (external).
+- Automatizar backups con logs o scripts (externos).
 
 Buenas prácticas adicionales:
 

@@ -6,6 +6,7 @@ Contenido principal:
 
 | Archivo                                                                              | Descripción                                                   |
 | ------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
+| [`Cisco_Password_Recovery.md`](Cisco_Password_Recovery.md)                         | Recuperación de contraseñas y borrado de configuración (routers y switches) |
 | [`01_comandos_basicos.md`](01_comandos_basicos.md)                                   | Comandos básicos y explicaciones rápidas                      |
 | [`02_vlan_y_trunking.md`](02_vlan_y_trunking.md)                                     | VLANs, trunks, voice VLAN, native VLAN, DTP y troubleshooting |
 | [`03_routing_estatico_y_dinamico.md`](03_routing_estatico_y_dinamico.md)             | Rutas estáticas, resumen CCNA Redes 1/2/3                     |
@@ -15,5 +16,15 @@ Contenido principal:
 | [`07_acl_y_ace.md`](07_acl_y_ace.md)                                                 | ACLs estándar y extendidas, por nombre                        |
 | [`08_seguridad_basica.md`](08_seguridad_basica.md)                                   | Port-security, hardening, SSH, bloqueo de intentos            |
 | [`09_ipv6_configuracion.md`](09_ipv6_configuracion.md)                               | Comandos IPv6, SLAAC y verificación                           |
-| [`10_comandos_utiles_y_troubleshooting.md`](10_comandos_utiles_y_troubleshooting.md) | Comandos de diagnóstico y recuperación de contraseña          |
+| [`10_comandos_utiles_y_troubleshooting.md`](10_comandos_utiles_y_troubleshooting.md) | Comandos de diagnóstico y recuperación de contraseñas         |
 | [`cheatsheet.md`](cheatsheet.md)                                                     | Hoja rápida con los comandos más usados                       |
+
+
+## Examples
+
+Guía con ejemplos completos y topologías combinadas:
+
+| Carpeta / Archivo | Descripción |
+| ----------------- | ----------- |
+| [`examples/README.md`](examples/README.md) | Índice de ejemplos prácticos y avanzados |
+

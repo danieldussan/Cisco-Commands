@@ -30,9 +30,9 @@ R1(config)# `interface GigabitEthernet0/0`
 R1(config-if)# `ip access-group 110 out`
 
 Notas:
+Notas:
 - ACL extendida permite especificar protocolos (tcp/udp/icmp), puertos y direcciones origen/destino.
-- Orden importante: la primera coincidencia aplica (implicit deny al final).
-
+- Orden importante: la primera coincidencia aplica (al final existe una denegación implícita - "implicit deny").
 ## ACL por nombre (recomendada)
 
 R1(config)# `ip access-list extended BLOCK_HTTP`

@@ -34,7 +34,7 @@ Referencias rápidas de comandos Cisco más usados.
 `line vty 0 15`
 `transport input ssh`
 
--- Verificaciones utiles
+-- Verificaciones útiles
 `show running-config`
 `show ip interface brief`
 `show interfaces trunk`

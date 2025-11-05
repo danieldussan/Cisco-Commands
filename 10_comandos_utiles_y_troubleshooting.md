@@ -41,5 +41,5 @@ Comandos rápidos para diagnóstico y monitoreo.
 
 ## Tips rápidos
 
--- Cuando algo no funciona, revisar `show ip interface brief`, `show ip route` y `show running-config`.
+- Cuando algo no funciona, revisar `show ip interface brief`, `show ip route` y `show running-config`.
 - Para problemas de enlace, revisar `show interfaces <if>` y `show controllers <if>`.
