@@ -23,156 +23,312 @@ Este archivo reúne los comandos más comunes en routers y switches Cisco, con e
 
 ## Accesos y modos
 
-- Descripción: pasar a modo privilegiado (exec).
-- `enable`
-  - Descripción: volver al modo anterior.
+- Pasar a modo privilegiado (exec):
 
-- `exit`
-  - Descripción: entrar a modo de configuración global.
+  ```
+  switch> enable
+  switch#
+  ```
 
-- `configure terminal`
+- Volver al modo anterior:
+
+  ```
+  switch# exit
+  switch>
+  ```
+
+- Entrar a modo de configuración global:
+
+  ```
+  switch# configure terminal
+  switch(config)#
+  ```
 
 ## Visualización de configuraciones
 
-- Muestra la configuración activa en RAM.
-- `show running-config`
-  - Muestra la configuración almacenada en NVRAM (arranque).
+- Muestra la configuración activa en RAM:
 
-- `show startup-config`
-  - Argumentos: `interface-id` (opcional) — p.ej. `GigabitEthernet0/1`.
-  - Muestra estadísticas y estado de la interfaz.
+  ```
+  switch# show running-config
+  ```
 
-- `show interfaces [interface-id]`
-  - Muestra resumen de interfaces con IP y estado.
+- Muestra la configuración almacenada en NVRAM (arranque):
 
-- `show ip interface brief`
-  - Muestra la tabla de enrutamiento (rutas conectadas, estáticas y aprendidas).
+  ```
+  switch# show startup-config
+  ```
 
-- `show ip route`
-  - Muestra lista de VLANs y sus puertos.
+- Muestra estadísticas y estado de la interfaz (argumentos: `interface-id` opcional — p.ej. `GigabitEthernet0/1`):
 
-- `show vlan brief`
+  ```
+  switch# show interfaces [interface-id]
+  ```
+
+- Muestra resumen de interfaces con IP y estado:
+
+  ```
+  switch# show ip interface brief
+  ```
+
+- Muestra la tabla de enrutamiento (rutas conectadas, estáticas y aprendidas):
+
+  ```
+  switch# show ip route
+  ```
+
+- Muestra lista de VLANs y sus puertos:
+
+  ```
+  switch# show vlan brief
+  ```
 
 ## Configuración de interfaz
 
-- Ejemplo: `interface GigabitEthernet0/1`.
-- Entra al modo de configuración de la interfaz.
-- `interface TYPE/NUMBER`
-  - Apagar o encender la interfaz.
+- Entrar al modo de configuración de la interfaz (ejemplo: `interface GigabitEthernet0/1`):
 
-- `shutdown` / `no shutdown`
-  - Agrega una descripción a la interfaz.
+  ```
+  switch(config)# interface TYPE/NUMBER
+  switch(config-if)#
+  ```
 
-- `description TEXT`
+- Apagar o encender la interfaz:
+
+  ```
+  switch(config-if)# shutdown
+  switch(config-if)# no shutdown
+  ```
+
+- Agregar una descripción a la interfaz:
+
+  ```
+  switch(config-if)# description TEXT
+  ```
 
 ## VLANs y trunking (resumen rápido)
 
-- Crea o edita una VLAN.
-- `vlan <id>`
-  - Configura el puerto como acceso (un solo VLAN).
+- Crear o editar una VLAN:
 
-- `switchport mode access`
-  - Asigna la VLAN de acceso al puerto.
+  ```
+  switch(config)# vlan <id>
+  switch(config-vlan)#
+  ```
 
-- `switchport access vlan <vlan-id>`
-  - Pone el puerto en modo troncal (lleva múltiples VLANs).
+- Configurar el puerto como acceso (un solo VLAN):
 
-- `switchport mode trunk`
-  - VLAN nativa para troncales (sin tag dot1q).
+  ```
+  switch(config-if)# switchport mode access
+  ```
 
-- `switchport trunk native vlan <vlan-id>`
+- Asignar la VLAN de acceso al puerto:
+
+  ```
+  switch(config-if)# switchport access vlan <vlan-id>
+  ```
+
+- Poner el puerto en modo troncal (lleva múltiples VLANs):
+
+  ```
+  switch(config-if)# switchport mode trunk
+  ```
+
+- Configurar VLAN nativa para troncales (sin tag dot1q):
+
+  ```
+  switch(config-if)# switchport trunk native vlan <vlan-id>
+  ```
 
 ## Enrutamiento y rutas
 
-- Ejemplo: `ip route 0.0.0.0 0.0.0.0 192.168.1.1`
-- Crea una ruta estática. `distance` es opcional (administrative distance).
-- `ip route <dest> <mask> <next-hop-ip|exit-intf> [distance]`
+- Crear una ruta estática. `distance` es opcional (administrative distance). Ejemplo: `ip route 0.0.0.0 0.0.0.0 192.168.1.1`:
+
+  ```
+  router(config)# ip route <dest> <mask> <next-hop-ip|exit-intf> [distance]
+  ```
 
 ## DHCP en routers
 
-- Excluye direcciones del pool DHCP.
-- `ip dhcp excluded-address <start> <end>`
-  - Crea un pool DHCP. Opciones dentro del modo: `network`, `default-router`, `dns-server`.
+- Excluir direcciones del pool DHCP:
 
-- `ip dhcp pool <name>`
+  ```
+  router(config)# ip dhcp excluded-address <start> <end>
+  ```
+
+- Crear un pool DHCP. Opciones dentro del modo: `network`, `default-router`, `dns-server`:
+
+  ```
+  router(config)# ip dhcp pool <name>
+  router(dhcp-config)#
+  ```
 
 ## NAT y PAT (resumen)
 
-- NAT dinámico desde una lista de direcciones hacia un pool público.
-- `ip nat inside source list <acl> pool <name>`
-  - PAT (NAT sobrecargado) — mapea múltiples privados a una sola IP pública (interfaz).
+- NAT dinámico desde una lista de direcciones hacia un pool público:
 
-- `ip nat inside source list <acl> interface <if> overload`
+  ```
+  router(config)# ip nat inside source list <acl> pool <name>
+  ```
+
+- PAT (NAT sobrecargado) — mapea múltiples privados a una sola IP pública (interfaz):
+
+  ```
+  router(config)# ip nat inside source list <acl> interface <if> overload
+  ```
 
 Nota: no olvidar marcar las interfaces con `ip nat inside` y `ip nat outside` según corresponda.
 
 ## ACLs (resumen)
 
-- ACL estándar. `num` 1-99 o 1300-1999.
-- `access-list <num> permit|deny <src> <wildcard>`
-  - ACL extendida para protocolos y puertos.
+- ACL estándar. `num` 1-99 o 1300-1999:
 
-- `access-list <num> deny|permit tcp <src> <wildcard> <dst> <wildcard> eq <port>`
+  ```
+  router(config)# access-list <num> permit|deny <src> <wildcard>
+  ```
+
+- ACL extendida para protocolos y puertos:
+
+  ```
+  router(config)# access-list <num> deny|permit tcp <src> <wildcard> <dst> <wildcard> eq <port>
+  ```
 
 ## Guardar y reiniciar
 
-- Guarda la configuración activa en NVRAM.
-- `copy running-config startup-config`
-  - Reinicia el dispositivo.
+- Guardar la configuración activa en NVRAM:
 
-- `reload`
+  ```
+  switch# copy running-config startup-config
+  ```
+
+- Reiniciar el dispositivo:
+
+  ```
+  switch# reload
+  ```
 
 ## SSH y acceso seguro (resumen)
 
-- Define nombre de dominio para generar claves RSA.
-- `ip domain-name <name>`
-  - Genera claves RSA. (Algunas versiones requieren `modulus 1024` o `2048`).
+- Definir nombre de dominio para generar claves RSA:
 
-- `crypto key generate rsa`
-  - Crea usuario local con contraseña encriptada.
+  ```
+  router(config)# ip domain-name <name>
+  ```
 
-- `username <user> secret <password>`
-  - Configura líneas vty para Telnet/SSH. Comandos comunes dentro:
-  - `transport input ssh` — permitir solo SSH.
-  - `login local` — usar base de usuarios local.
+- Generar claves RSA (algunas versiones requieren `modulus 1024` o `2048`):
 
-- `line vty 0 15`
+  ```
+  router(config)# crypto key generate rsa
+  ```
+
+- Crear usuario local con contraseña encriptada:
+
+  ```
+  router(config)# username <user> secret <password>
+  ```
+
+- Configurar líneas vty para Telnet/SSH. Comandos comunes dentro: `transport input ssh` (permitir solo SSH), `login local` (usar base de usuarios local):
+
+  ```
+  router(config)# line vty 0 15
+  router(config-line)# transport input ssh
+  router(config-line)# login local
+  ```
 
 ## Recuperación de contraseña (resumen)
 
 Pasos rápidos:
 
 1. Reiniciar y entrar en ROMMON (Ctrl+Break).
-2. `confreg 0x2142` — ignorar startup-config.
-3. `reset` o `reload`.
-4. `copy startup-config running-config`.
-5. Cambiar contraseñas y `config-register 0x2102`.
-6. `write memory` y `reload`.
+2. Configurar registro para ignorar startup-config:
+
+   ```
+   rommon> confreg 0x2142
+   ```
+
+3. Reiniciar:
+
+   ```
+   rommon> reset
+   ```
+
+4. Copiar startup-config a running-config:
+
+   ```
+   router# copy startup-config running-config
+   ```
+
+5. Cambiar contraseñas y restaurar registro:
+
+   ```
+   router(config)# config-register 0x2102
+   ```
+
+6. Guardar y reiniciar:
+
+   ```
+   router# write memory
+   router# reload
+   ```
 
 ## EtherChannel (resumen)
 
-- Selecciona rango de interfaces.
-- `interface range FastEthernet0/1 - 2`
-  - Agrupa interfaces en EtherChannel (LACP - activo).
+- Seleccionar rango de interfaces:
 
-- `channel-group 1 mode active`
-  - Configura la interfaz lógica del bundle.
+  ```
+  switch(config)# interface range FastEthernet0/1 - 2
+  ```
 
-- `interface port-channel 1`
+- Agrupar interfaces en EtherChannel (LACP - activo):
+
+  ```
+  switch(config-if-range)# channel-group 1 mode active
+  ```
+
+- Configurar la interfaz lógica del bundle:
+
+  ```
+  switch(config)# interface port-channel 1
+  ```
 
 ## Cheatsheet rápido
 
-- `show interfaces`
-- `show ip route`
-- `show vlan brief`
-- `copy run start`
+- Mostrar interfaces:
+
+  ```
+  switch# show interfaces
+  ```
+
+- Mostrar tabla de enrutamiento:
+
+  ```
+  router# show ip route
+  ```
+
+- Mostrar VLANs:
+
+  ```
+  switch# show vlan brief
+  ```
+
+- Guardar configuración:
+
+  ```
+  switch# copy running-config startup-config
+  ```
 
 ---
 
 Notas rápidas adicionales:
 
-- `show running-config | include <string>` — buscar líneas que contengan `<string>` en la running-config.
-- `show logging` — ver mensajes del syslog en el dispositivo.
+- Buscar líneas que contengan `<string>` en la running-config:
+
+  ```
+  switch# show running-config | include <string>
+  ```
+
+- Ver mensajes del syslog en el dispositivo:
+
+  ```
+  switch# show logging
+  ```
 
 ---
 
@@ -195,16 +351,20 @@ Contenido:
 
 ## Crear VLAN y asignar puertos
 
-Crear VLAN:
+- Crear VLAN:
 
-S1(config)# `vlan 10`
-S1(config-vlan)# `name Users`
+  ```
+  S1(config)# vlan 10
+  S1(config-vlan)# name Users
+  ```
 
-Asignar puerto a VLAN (modo access):
+- Asignar puerto a VLAN (modo access):
 
-S1(config)# `interface GigabitEthernet1/0/5`
-S1(config-if)# `switchport mode access`
-S1(config-if)# `switchport access vlan 10`
+  ```
+  S1(config)# interface GigabitEthernet1/0/5
+  S1(config-if)# switchport mode access
+  S1(config-if)# switchport access vlan 10
+  ```
 
 Explicación breve:
 
@@ -213,16 +373,20 @@ Explicación breve:
 
 ## Configurar trunk 802.1Q
 
-Configurar trunk estático (recomendado cuando se conoce el otro extremo):
+- Configurar trunk estático (recomendado cuando se conoce el otro extremo):
 
-S1(config)# `interface GigabitEthernet1/0/1`
-S1(config-if)# `switchport mode trunk`
-S1(config-if)# `switchport trunk encapsulation dot1q` # (en plataformas que soportan ambos)
-S1(config-if)# `switchport trunk native vlan 99`
+  ```
+  S1(config)# interface GigabitEthernet1/0/1
+  S1(config-if)# switchport mode trunk
+  S1(config-if)# switchport trunk encapsulation dot1q
+  S1(config-if)# switchport trunk native vlan 99
+  ```
 
-Permitir VLANs específicas en el trunk:
+- Permitir VLANs específicas en el trunk:
 
-S1(config-if)# `switchport trunk allowed vlan 10,20,99`
+  ```
+  S1(config-if)# switchport trunk allowed vlan 10,20,99
+  ```
 
 Notas:
 
@@ -230,30 +394,43 @@ Notas:
 
 ## DTP (Negotiation)
 
-- Intenta negociar un trunk (LHS inicia).
-- `switchport mode dynamic desirable`
-  - Responde a negociaciones.
+- Intentar negociar un trunk (LHS inicia):
 
-- `switchport mode dynamic auto`
-  - Para seguridad: desactiva DTP en puertos trunk estáticos.
+  ```
+  S1(config-if)# switchport mode dynamic desirable
+  ```
 
-- `switchport nonegotiate`
+- Responder a negociaciones:
 
-Ejemplo seguro (trunk estático, sin DTP):
+  ```
+  S1(config-if)# switchport mode dynamic auto
+  ```
 
-S1(config)# `interface GigabitEthernet1/0/1`
-S1(config-if)# `switchport mode trunk`
-S1(config-if)# `switchport nonegotiate`
+- Para seguridad: desactivar DTP en puertos trunk estáticos:
+
+  ```
+  S1(config-if)# switchport nonegotiate
+  ```
+
+- Ejemplo seguro (trunk estático, sin DTP):
+
+  ```
+  S1(config)# interface GigabitEthernet1/0/1
+  S1(config-if)# switchport mode trunk
+  S1(config-if)# switchport nonegotiate
+  ```
 
 ## Voice VLAN
 
-Cuando conectas teléfonos IP, normalmente quieres separar la voz y datos:
+- Cuando conectas teléfonos IP, normalmente quieres separar la voz y datos:
 
-S1(config)# `interface GigabitEthernet1/0/10`
-S1(config-if)# `switchport mode access`
-S1(config-if)# `switchport access vlan 10` # VLAN datos
-S1(config-if)# `switchport voice vlan 150` # VLAN voz
-S1(config-if)# `mls qos trust cos` # confiar en el COS del teléfono
+  ```
+  S1(config)# interface GigabitEthernet1/0/10
+  S1(config-if)# switchport mode access
+  S1(config-if)# switchport access vlan 10
+  S1(config-if)# switchport voice vlan 150
+  S1(config-if)# mls qos trust cos
+  ```
 
 Explicación:
 
@@ -261,17 +438,29 @@ Explicación:
 
 ## Troubleshooting de trunks
 
-- Muestra puertos trunk, VLANs permitidas y native VLAN.
-- `show interfaces trunk`
-  - Confirma qué puertos están asignados a cada VLAN.
+- Mostrar puertos trunk, VLANs permitidas y native VLAN:
 
-- `show vlan brief`
-  - Muestra modo del puerto (access/trunk), VLAN nativa y configuración DTP.
+  ```
+  switch# show interfaces trunk
+  ```
 
-- `show interfaces GigabitEthernet1/0/1 switchport`
-  - Verifica la conexión entre switches y la interfaz remota.
+- Confirmar qué puertos están asignados a cada VLAN:
 
-- `show cdp neighbors detail`
+  ```
+  switch# show vlan brief
+  ```
+
+- Mostrar modo del puerto (access/trunk), VLAN nativa y configuración DTP:
+
+  ```
+  switch# show interfaces GigabitEthernet1/0/1 switchport
+  ```
+
+- Verificar la conexión entre switches y la interfaz remota:
+
+  ```
+  switch# show cdp neighbors detail
+  ```
 
 Problemas comunes y soluciones:
 
@@ -300,13 +489,17 @@ Problemas comunes y soluciones:
 
 ## Rutas estáticas
 
-Comando:
+- Crear una ruta estática:
 
-`ip route <network> <mask> <next-hop-ip | exit-interface> [administrative-distance]`
+  ```
+  R1(config)# ip route <network> <mask> <next-hop-ip | exit-interface> [administrative-distance]
+  ```
 
 Ejemplo:
 
-R1(config)# `ip route 0.0.0.0 0.0.0.0 203.0.113.1`
+    ```
+    R1(config)# ip route 0.0.0.0 0.0.0.0 203.0.113.1
+    ```
 
 Notas:
 
@@ -378,18 +571,24 @@ Consejo: siempre comenzar con la subred más grande.
 
 ## Router-on-a-stick (subinterfaces dot1Q)
 
-Configuración en un router (R1) para VLAN 10, 20:
+- Configuración en un router (R1) para VLAN 10, 20:
 
-R1(config)# `interface GigabitEthernet0/0.10`
-R1(config-subif)# `encapsulation dot1Q 10`
-R1(config-subif)# `ip address 192.168.10.1 255.255.255.192`
+  ```
+  R1(config)# interface GigabitEthernet0/0.10
+  R1(config-subif)# encapsulation dot1Q 10
+  R1(config-subif)# ip address 192.168.10.1 255.255.255.192
+  ```
 
-R1(config)# `interface GigabitEthernet0/0.20`
-R1(config-subif)# `encapsulation dot1Q 20`
-R1(config-subif)# `ip address 192.168.20.1 255.255.255.192`
+  ```
+  R1(config)# interface GigabitEthernet0/0.20
+  R1(config-subif)# encapsulation dot1Q 20
+  R1(config-subif)# ip address 192.168.20.1 255.255.255.192
+  ```
 
-R1(config)# `interface GigabitEthernet0/0`
-R1(config-if)# `no shutdown`
+  ```
+  R1(config)# interface GigabitEthernet0/0
+  R1(config-if)# no shutdown
+  ```
 
 Explicación rápida de argumentos:
 
@@ -397,14 +596,23 @@ Explicación rápida de argumentos:
 
 ## Verificación
 
-- Muestra resumen de interfaces con IP y estado.
-- `show ip interface brief`
-  - Muestra puertos trunk, VLANs permitidas y native VLAN (en switch).
+- Mostrar resumen de interfaces con IP y estado:
 
-- `show interfaces trunk`
-  - Muestra la tabla de enrutamiento (ver rutas conectadas a las subinterfaces).
+  ```
+  router# show ip interface brief
+  ```
 
-- `show ip route`
+- Mostrar puertos trunk, VLANs permitidas y native VLAN (en switch):
+
+  ```
+  switch# show interfaces trunk
+  ```
+
+- Mostrar la tabla de enrutamiento (ver rutas conectadas a las subinterfaces):
+
+  ```
+  router# show ip route
+  ```
 
 ---
 
@@ -412,16 +620,20 @@ Explicación rápida de argumentos:
 
 ## DHCP
 
-Exclusión de direcciones:
+- Exclusión de direcciones:
 
-R1(config)# `ip dhcp excluded-address 192.168.10.1 192.168.10.10`
+  ```
+  R1(config)# ip dhcp excluded-address 192.168.10.1 192.168.10.10
+  ```
 
-Pool DHCP:
+- Pool DHCP:
 
-R1(config)# `ip dhcp pool LAN10`
-R1(dhcp-config)# `network 192.168.10.0 255.255.255.0`
-R1(dhcp-config)# `default-router 192.168.10.1`
-R1(dhcp-config)# `dns-server 8.8.8.8`
+  ```
+  R1(config)# ip dhcp pool LAN10
+  R1(dhcp-config)# network 192.168.10.0 255.255.255.0
+  R1(dhcp-config)# default-router 192.168.10.1
+  R1(dhcp-config)# dns-server 8.8.8.8
+  ```
 
 Explicación de argumentos:
 
@@ -430,9 +642,13 @@ Explicación de argumentos:
 
 ## NAT dinámico
 
-R1# `ip nat pool MiPool 200.10.10.1 200.10.10.10 netmask 255.255.255.0`
-R1# `access-list 1 permit 192.168.10.0 0.0.0.255`
-R1# `ip nat inside source list 1 pool MiPool`
+- Configurar NAT dinámico:
+
+  ```
+  R1(config)# ip nat pool MiPool 200.10.10.1 200.10.10.10 netmask 255.255.255.0
+  R1(config)# access-list 1 permit 192.168.10.0 0.0.0.255
+  R1(config)# ip nat inside source list 1 pool MiPool
+  ```
 
 Explicación:
 
@@ -441,7 +657,11 @@ Explicación:
 
 ## PAT (NAT Overload)
 
-R1(config)# `ip nat inside source list 1 interface GigabitEthernet0/0 overload`
+- Configurar PAT (NAT sobrecargado):
+
+  ```
+  R1(config)# ip nat inside source list 1 interface GigabitEthernet0/0 overload
+  ```
 
 Explicación:
 
@@ -449,30 +669,49 @@ Explicación:
 
 ## DNS básico en IOS
 
-R1(config)# `ip name-server 8.8.8.8`
+- Configurar servidor DNS:
+
+  ```
+  R1(config)# ip name-server 8.8.8.8
+  ```
 
 Nota: routers pueden resolver nombres para ciertos servicios; para servidores DNS completos, usar servidores dedicados.
 
 ## Verificación
 
-- Muestra traducciones NAT activas.
-  R1# `show ip nat translations`
+- Mostrar traducciones NAT activas:
 
-- Muestra estadísticas de NAT.
-  R1# `show ip nat statistics`
+  ```
+  R1# show ip nat translations
+  ```
 
-- Muestra asignaciones DHCP activas.
-  R1# `show ip dhcp binding`
+- Mostrar estadísticas de NAT:
+
+  ```
+  R1# show ip nat statistics
+  ```
+
+- Mostrar asignaciones DHCP activas:
+
+  ```
+  R1# show ip dhcp binding
+  ```
 
 ---
 
 Nota práctica:
 
 - No olvidar marcar las interfaces de acuerdo a su rol en NAT:
-  - `interface GigabitEthernet0/0`
-    - `ip nat inside` (en la interfaz hacia la red privada)
-  - `interface GigabitEthernet0/1`
-    - `ip nat outside` (en la interfaz hacia Internet)
+
+  ```
+  R1(config)# interface GigabitEthernet0/0
+  R1(config-if)# ip nat inside
+  ```
+
+  ```
+  R1(config)# interface GigabitEthernet0/1
+  R1(config-if)# ip nat outside
+  ```
 
 ---
 
@@ -482,11 +721,13 @@ Este archivo contiene ejemplos de configuración y comandos de verificación bá
 
 ## OSPF
 
-Configuración básica (área 0):
+- Configuración básica (área 0):
 
-R1(config)# `router ospf 1`
-R1(config-router)# `network 192.168.1.0 0.0.0.255 area 0`
-R1(config-router)# `passive-interface GigabitEthernet0/0`
+  ```
+  R1(config)# router ospf 1
+  R1(config-router)# network 192.168.1.0 0.0.0.255 area 0
+  R1(config-router)# passive-interface GigabitEthernet0/0
+  ```
 
 Notas:
 
@@ -495,21 +736,34 @@ Notas:
 
 Verificación:
 
-- Muestra protocolos de routing configurados.
-  R1# `show ip protocols`
+- Mostrar protocolos de routing configurados:
 
-- Muestra vecinos OSPF.
-  R1# `show ip ospf neighbor`
+  ```
+  R1# show ip protocols
+  ```
 
-- Muestra información de interfaces OSPF.
-  R1# `show ip ospf interface`
+- Mostrar vecinos OSPF:
+
+  ```
+  R1# show ip ospf neighbor
+  ```
+
+- Mostrar información de interfaces OSPF:
+
+  ```
+  R1# show ip ospf interface
+  ```
 
 ## RIP v2
 
-R1(config)# `router rip`
-R1(config-router)# `version 2`
-R1(config-router)# `network 192.168.1.0`
-R1(config-router)# `no auto-summary`
+- Configurar RIP v2:
+
+  ```
+  R1(config)# router rip
+  R1(config-router)# version 2
+  R1(config-router)# network 192.168.1.0
+  R1(config-router)# no auto-summary
+  ```
 
 Notas:
 
@@ -518,17 +772,27 @@ Notas:
 
 Verificación:
 
-- Muestra base de datos RIP.
-  R1# `show ip rip database`
+- Mostrar base de datos RIP:
 
-- Muestra solo rutas aprendidas por RIP.
-  R1# `show ip route rip`
+  ```
+  R1# show ip rip database
+  ```
+
+- Mostrar solo rutas aprendidas por RIP:
+
+  ```
+  R1# show ip route rip
+  ```
 
 ## EIGRP (classic)
 
-R1(config)# `router eigrp 10`
-R1(config-router)# `network 192.168.1.0 0.0.0.255`
-R1(config-router)# `no auto-summary`
+- Configurar EIGRP:
+
+  ```
+  R1(config)# router eigrp 10
+  R1(config-router)# network 192.168.1.0 0.0.0.255
+  R1(config-router)# no auto-summary
+  ```
 
 Notas:
 
@@ -537,14 +801,23 @@ Notas:
 
 Verificación:
 
-- Muestra vecinos EIGRP.
-  R1# `show ip eigrp neighbors`
+- Mostrar vecinos EIGRP:
 
-- Muestra topología EIGRP.
-  R1# `show ip eigrp topology`
+  ```
+  R1# show ip eigrp neighbors
+  ```
 
-- Muestra protocolos de routing configurados.
-  R1# `show ip protocols`
+- Mostrar topología EIGRP:
+
+  ```
+  R1# show ip eigrp topology
+  ```
+
+- Mostrar protocolos de routing configurados:
+
+  ```
+  R1# show ip protocols
+  ```
 
 ## Consejos de diseño y CCNA
 
@@ -560,11 +833,13 @@ Guía práctica para crear y aplicar listas de control de acceso (ACL) en router
 
 ## ACL estándar
 
-Ejemplo:
+- Ejemplo de configuración y aplicación:
 
-- R1(config)# `access-list 10 permit 192.168.1.0 0.0.0.255`
-- R1(config)# `interface GigabitEthernet0/0`
-- R1(config-if)# `ip access-group 10 in`
+  ```
+  R1(config)# access-list 10 permit 192.168.1.0 0.0.0.255
+  R1(config)# interface GigabitEthernet0/0
+  R1(config-if)# ip access-group 10 in
+  ```
 
 Notas:
 
@@ -573,22 +848,29 @@ Notas:
 
 Verificación:
 
-- Muestra todas las ACLs configuradas.
-  R1# `show access-lists`
+- Mostrar todas las ACLs configuradas:
 
-- Muestra información de la interfaz incluyendo ACLs aplicadas.
-  R1# `show ip interface GigabitEthernet0/0`
+  ```
+  R1# show access-lists
+  ```
+
+- Mostrar información de la interfaz incluyendo ACLs aplicadas:
+
+  ```
+  R1# show ip interface GigabitEthernet0/0
+  ```
 
 ## ACL extendida
 
-Ejemplo denegando HTTP entre dos subredes:
+- Ejemplo denegando HTTP entre dos subredes:
 
-R1(config)# `access-list 110 deny tcp 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255 eq 80`
-R1(config)# `access-list 110 permit ip any any`
-R1(config)# `interface GigabitEthernet0/0`
-R1(config-if)# `ip access-group 110 out`
+  ```
+  R1(config)# access-list 110 deny tcp 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255 eq 80
+  R1(config)# access-list 110 permit ip any any
+  R1(config)# interface GigabitEthernet0/0
+  R1(config-if)# ip access-group 110 out
+  ```
 
-Notas:
 Notas:
 
 - ACL extendida permite especificar protocolos (tcp/udp/icmp), puertos y direcciones origen/destino.
@@ -596,14 +878,20 @@ Notas:
 
 ## ACL por nombre (recomendada)
 
-R1(config)# `ip access-list extended BLOCK_HTTP`
-R1(config-ext-nacl)# `deny tcp 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255 eq 80`
-R1(config-ext-nacl)# `permit ip any any`
+- Crear ACL extendida con nombre:
 
-Aplicar:
+  ```
+  R1(config)# ip access-list extended BLOCK_HTTP
+  R1(config-ext-nacl)# deny tcp 192.168.10.0 0.0.0.255 192.168.20.0 0.0.0.255 eq 80
+  R1(config-ext-nacl)# permit ip any any
+  ```
 
-R1(config)# `interface GigabitEthernet0/0`
-R1(config-if)# `ip access-group BLOCK_HTTP in`
+- Aplicar ACL a una interfaz:
+
+  ```
+  R1(config)# interface GigabitEthernet0/0
+  R1(config-if)# ip access-group BLOCK_HTTP in
+  ```
 
 ---
 
@@ -611,52 +899,134 @@ R1(config-if)# `ip access-group BLOCK_HTTP in`
 
 Sección con comandos para asegurar equipos de red a nivel básico (switches y routers).
 
+## Contraseñas
+
+### Contraseña de modo usuario
+
+- Configurar la contraseña de modo usuario:
+
+  ```
+  switch(config)# line console 0
+  switch(config-line)# password contraseña
+  ```
+
+- Activar la solicitud de contraseña al entrar en modo EXEC de usuario:
+
+  ```
+  switch(config-line)# login
+  ```
+
+### Contraseña de modo privilegiado
+
+- Configurar la contraseña de modo privilegiado:
+
+  ```
+  switch(config)# enable secret contraseña
+  ```
+
+### Contraseña remota
+
+- Configurar la contraseña para acceso remoto:
+
+  ```
+  switch(config)# line vty 0 15
+  switch(config-line)# password contraseña
+  ```
+
+- Configurar contraseña para acceso remoto con Telnet:
+
+  ```
+  S1(config)# line con 0
+  S1(config-line)# logging synchronous
+  ```
+
+- Activar la solicitud de contraseña al acceder de forma remota:
+
+  ```
+  switch(config-line)# login
+  ```
+
+## Encriptación de contraseñas
+
+- Encriptar las contraseñas:
+
+  ```
+  switch(config)# service password-encryption
+  ```
+
+## Guardar configuración y reiniciar
+
+- Guardar la configuración actual en la memoria no volátil:
+
+  ```
+  switch# copy running-config startup-config
+  ```
+
+- Reiniciar el dispositivo:
+
+  ```
+  switch# reload
+  ```
+
 ## Port-Security (switch)
 
-S1(config)# `interface FastEthernet0/1`
-S1(config-if)# `switchport mode access`
-S1(config-if)# `switchport port-security`
-S1(config-if)# `switchport port-security maximum 1`
-S1(config-if)# `switchport port-security violation shutdown`
-S1(config-if)# `switchport port-security mac-address sticky`
+- Configurar Port-Security en un puerto:
+
+  ```
+  S1(config)# interface FastEthernet0/1
+  S1(config-if)# switchport mode access
+  S1(config-if)# switchport port-security
+  S1(config-if)# switchport port-security maximum 1
+  S1(config-if)# switchport port-security violation shutdown
+  S1(config-if)# switchport port-security mac-address sticky
+  ```
 
 Explicación rápida:
 
-- Limita a 1 MAC por puerto.
-- `switchport port-security maximum 1`
-  - Acción al detectar violación: shut the port.
-
-- `switchport port-security violation shutdown`
-  - Aprende y guarda la MAC en la running-config.
-
-- `switchport port-security mac-address sticky`
+- `switchport port-security maximum 1` — limita a 1 MAC por puerto.
+- `switchport port-security violation shutdown` — acción al detectar violación: shut the port.
+- `switchport port-security mac-address sticky` — aprende y guarda la MAC en la running-config.
 
 ## Desactivar servicios inseguros
 
-R1(config)# `no cdp run`
-R1(config)# `no ip http server`
+- Desactivar CDP (Cisco Discovery Protocol):
+
+  ```
+  R1(config)# no cdp run
+  ```
+
+- Desactivar servidor HTTP:
+
+  ```
+  R1(config)# no ip http server
+  ```
 
 ## Protección de accesos y bloqueo de intentos
 
-R1(config)# `login block-for 60 attempts 3 within 30`
+- Bloquear intentos de login por 60 segundos si hay 3 intentos fallidos en 30 segundos:
 
-Explicación:
-
-- Bloquea intentos de login por 60 segundos si hay 3 intentos fallidos en 30 segundos.
-- `login block-for 60 attempts 3 within 30`
+  ```
+  R1(config)# login block-for 60 attempts 3 within 30
+  ```
 
 ## SSH (seguro)
 
-R1(config)# `ip domain-name example.com`
-R1(config)# `crypto key generate rsa modulus 2048`
-R1(config)# `username admin secret MiPasswordSeguro`
-R1(config)# `line vty 0 15`
-R1(config-line)# `transport input ssh`
-R1(config-line)# `login local`
+- Configurar SSH completo:
 
-Recomendación:
+  ```
+  R1(config)# ip domain-name example.com
+  R1(config)# crypto key generate rsa modulus 2048
+  R1(config)# username admin secret MiPasswordSeguro
+  R1(config)# line vty 0 15
+  R1(config-line)# transport input ssh
+  R1(config-line)# login local
+  ```
 
-- Forzar SSHv2: `R1(config)# ip ssh version 2`
+- Forzar SSHv2 (recomendación):
+
+  ```
+  R1(config)# ip ssh version 2
+  ```
 
 ## SNMP (recomendación)
 
@@ -664,28 +1034,51 @@ Recomendación:
 
 ## Backups y auditoría
 
-- Guardar configuraciones frecuentemente: `copy running-config startup-config`.
+- Guardar configuraciones frecuentemente:
+
+  ```
+  switch# copy running-config startup-config
+  ```
+
 - Automatizar backups con logs o scripts (externos).
 
 Buenas prácticas adicionales:
 
-- Algoritmo más seguro y encriptado. Usar en lugar de `enable password`.
-- `enable secret <clave>`
-  - Ofusca contraseñas de texto claro en la running-config.
+- Algoritmo más seguro y encriptado. Usar en lugar de `enable password`:
 
-- `service password-encryption`
-  - Almacena logs en memoria para revisión (tamaño del buffer en bytes).
+  ```
+  router(config)# enable secret <clave>
+  ```
 
-- `logging buffered 4096`
-  - Envía logs a servidor remoto.
+- Ofuscar contraseñas de texto claro en la running-config:
 
-- `logging <ip-del-servidor-syslog>`
-  - Habilita modelo AAA para centralizar autenticación/autorización/auditoría.
+  ```
+  router(config)# service password-encryption
+  ```
 
-- `aaa new-model`
-  - Configura autenticación con RADIUS y fallback local (ejemplo).
+- Almacenar logs en memoria para revisión (tamaño del buffer en bytes):
 
-- `aaa authentication login default group radius local`
+  ```
+  router(config)# logging buffered 4096
+  ```
+
+- Enviar logs a servidor remoto:
+
+  ```
+  router(config)# logging <ip-del-servidor-syslog>
+  ```
+
+- Habilitar modelo AAA para centralizar autenticación/autorización/auditoría:
+
+  ```
+  router(config)# aaa new-model
+  ```
+
+- Configurar autenticación con RADIUS y fallback local (ejemplo):
+
+  ```
+  router(config)# aaa authentication login default group radius local
+  ```
 
 ---
 
@@ -693,13 +1086,21 @@ Buenas prácticas adicionales:
 
 ## Habilitar enrutamiento IPv6
 
-R1(config)# `ipv6 unicast-routing`
+- Habilitar enrutamiento IPv6:
+
+  ```
+  R1(config)# ipv6 unicast-routing
+  ```
 
 ## Asignar direcciones a interfaces
 
-R1(config)# `interface GigabitEthernet0/0`
-R1(config-if)# `ipv6 address 2001:db8:acad:1::1/64`
-R1(config-if)# `no shutdown`
+- Asignar dirección IPv6 a una interfaz:
+
+  ```
+  R1(config)# interface GigabitEthernet0/0
+  R1(config-if)# ipv6 address 2001:db8:acad:1::1/64
+  R1(config-if)# no shutdown
+  ```
 
 ## SLAAC y DHCPv6
 
@@ -708,14 +1109,23 @@ R1(config-if)# `no shutdown`
 
 ## Verificación
 
-- Muestra resumen de interfaces IPv6 con estado.
-  R1# `show ipv6 interface brief`
+- Muestra resumen de interfaces IPv6 con estado:
 
-- Muestra la tabla de enrutamiento IPv6.
-  R1# `show ipv6 route`
+  ```
+  R1# show ipv6 interface brief
+  ```
 
-- Muestra tabla de vecinos IPv6 (equivalente a ARP en IPv4).
-  R1# `show ipv6 neighbors`
+- Muestra la tabla de enrutamiento IPv6:
+
+  ```
+  R1# show ipv6 route
+  ```
+
+- Muestra tabla de vecinos IPv6 (equivalente a ARP en IPv4):
+
+  ```
+  R1# show ipv6 neighbors
+  ```
 
 ---
 
@@ -723,51 +1133,112 @@ R1(config-if)# `no shutdown`
 
 Comandos rápidos para diagnóstico y monitoreo.
 
-- Verifica conectividad básica.
-- `ping <ip>`
-  - Muestra la ruta hacia un destino.
+- Verificar conectividad básica:
 
-- `traceroute <ip>`
-  - Muestra dispositivos Cisco conectados directamente.
+  ```
+  switch# ping <ip>
+  ```
 
-- `show cdp neighbors`
-  - Muestra tabla ARP.
+- Mostrar la ruta hacia un destino:
 
-- `show arp`
-  - Información de controladores y hardware (puede variar por plataforma).
+  ```
+  switch# traceroute <ip>
+  ```
 
-- `show controllers`
-  - Muestra paquetes IP procesados; usar con precaución en producción.
+- Mostrar dispositivos Cisco conectados directamente:
 
-- `debug ip packet`
+  ```
+  switch# show cdp neighbors
+  ```
+
+- Mostrar tabla ARP:
+
+  ```
+  switch# show arp
+  ```
+
+- Mostrar información de controladores y hardware (puede variar por plataforma):
+
+  ```
+  switch# show controllers
+  ```
+
+- Mostrar paquetes IP procesados; usar con precaución en producción:
+
+  ```
+  switch# debug ip packet
+  ```
 
 ## Comandos de verificación de capa 2/3
 
-- Muestra tabla de direcciones MAC aprendidas (en switch).
-- `show mac-address-table`
-  - Muestra puertos trunk, VLANs permitidas y native VLAN.
+- Mostrar tabla de direcciones MAC aprendidas (en switch):
 
-- `show interfaces trunk`
-  - Muestra resumen de grupos EtherChannel configurados.
+  ```
+  switch# show mac-address-table
+  ```
 
-- `show etherchannel summary`
+- Mostrar puertos trunk, VLANs permitidas y native VLAN:
+
+  ```
+  switch# show interfaces trunk
+  ```
+
+- Mostrar resumen de grupos EtherChannel configurados:
+
+  ```
+  switch# show etherchannel summary
+  ```
 
 ## Recuperación de contraseñas (resumen operativo)
 
 1. Reiniciar y entrar en ROMMON (Ctrl+Break).
-2. `confreg 0x2142`
-3. `reset`
-4. `copy startup-config running-config`
+2. Configurar registro de configuración para ignorar startup-config:
+
+   ```
+   rommon> confreg 0x2142
+   ```
+
+3. Reiniciar:
+
+   ```
+   rommon> reset
+   ```
+
+4. Copiar startup-config a running-config:
+
+   ```
+   router# copy startup-config running-config
+   ```
+
 5. Cambiar contraseñas.
-6. `config-register 0x2102`
-7. `write memory` y `reload`.
+6. Restaurar registro de configuración:
+
+   ```
+   router(config)# config-register 0x2102
+   ```
+
+7. Guardar y reiniciar:
+
+   ```
+   router# write memory
+   router# reload
+   ```
 
 ## Tips rápidos
 
-- Cuando algo no funciona, revisar estos comandos para diagnóstico básico.
-- `show ip interface brief`, `show ip route`, `show running-config`
-  - Para problemas de enlace físico, revisar estos comandos.
+- Cuando algo no funciona, revisar estos comandos para diagnóstico básico:
 
-- `show interfaces <if>`, `show controllers <if>`
+  ```
+  switch# show ip interface brief
+  switch# show ip route
+  switch# show running-config
+  ```
+
+- Para problemas de enlace físico, revisar estos comandos:
+
+  ```
+  switch# show interfaces <if>
+  switch# show controllers <if>
+  ```
 
 ---
